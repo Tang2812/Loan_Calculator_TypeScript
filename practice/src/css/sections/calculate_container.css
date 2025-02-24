@@ -1,0 +1,25 @@
+.calculate-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+/* tablets */
+@media only screen and (min-width: 740px) and (max-width: 1024px) {
+  .calculate-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    flex-direction: column;
+  }
+
+}
+
+@media only screen and (min-width: 320px) and (max-width: 739px) {
+  .calculate-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    flex-direction: column;
+  }
+}

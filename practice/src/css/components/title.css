@@ -1,0 +1,12 @@
+.title {
+  font-size: var(--heading-size-md);
+  font-weight: var(--regular);
+  line-height: 125%;
+}
+
+/* mobile */
+@media only screen and (min-width: 320px) and (max-width: 739px) {
+  .title {
+    font-size: var(--heading-size-responsive)
+  }
+}

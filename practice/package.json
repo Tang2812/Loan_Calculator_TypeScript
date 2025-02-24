@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
+    "flatpickr": "^4.6.13",
+    "litepicker": "^2.0.12",
+    "parcel": "^2.13.3",
+    "parcel-bundler": "^1.12.5",
+    "xlsx": "^0.18.5"
+  },
+  "name": "practice",
+  "version": "1.0.0",
+  "source": "src/index.ts",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html --public-url ./"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/file-saver": "^2.0.7",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "svgo": "^3.3.2",
+    "typescript": "^5.7.3"
+  }
+}
