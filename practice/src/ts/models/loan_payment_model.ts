@@ -1,5 +1,5 @@
 export class LoanPaymentModel {
-  constructor(public origin: number, public remainningOriginalAmount: number,public interest: number,public repaymentPeriod: string,public toralPrincipalAndInterest: number) {
+  constructor(public origin: number, public remainningOriginalAmount: number, public interest: number, public repaymentPeriod: string, public toralPrincipalAndInterest: number) {
 
   }
 

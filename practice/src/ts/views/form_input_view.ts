@@ -1,11 +1,27 @@
-import FormInputController from "../controllers/form_input_controller";
-import { LoanPaymentModel } from "../models/loan_payment_model";
-import { Ultil } from "../utils/utils";
+import FormInputController from "@controllers/form_input_controller";
+import { LoanPaymentModel } from "@models/loan_payment_model";
+import { Ultil } from "@utils/utils";
 
 const ultil = new Ultil();
 interface InputErrorMessage {
   inputStatus: boolean,
   errorMessages: string[]
+}
+
+interface InputBoxsParam {
+  propertyValue: HTMLInputElement,
+  loanAmount: HTMLInputElement,
+  loanTerm: HTMLInputElement,
+  interestRate: HTMLInputElement,
+  disbursementDate: HTMLInputElement
+}
+
+interface ValueOfTableResultParam {
+  totalInterest: string,
+  totaInterestPayple: string,
+  totalOrigin: string,
+  minMonthlyPayment: string,
+  maxMonthlyPayment: string
 }
 const propertyValue = document.querySelector('#property-value')! as HTMLInputElement;
 const loanAmount = document.querySelector('#loan-amount')! as HTMLInputElement;
@@ -42,9 +58,17 @@ export const FormInputView = {
    *function get value when user input to input box
    */
   getValueWhenUserInput: function () {
+    const inputBoxsParam = {
+      propertyValue: propertyValue,
+      loanAmount: loanAmount,
+      loanTerm: loanTerm,
+      interestRate: interestRate,
+      disbursementDate: disbursementDate
+    }
+
     inputBoxs.forEach(input => {
       input.addEventListener('input', () => {
-        this.getValue(propertyValue, loanAmount, loanTerm, interestRate, disbursementDate);
+        this.getValue(inputBoxsParam);
       })
     });
 
@@ -52,39 +76,42 @@ export const FormInputView = {
      *function get user when user chang value of slider
      */
     slider!.addEventListener('input', () => {
-      this.getValue(propertyValue, loanAmount, loanTerm, interestRate, disbursementDate);
+      this.getValue(inputBoxsParam);
     })
 
     /**
      * function get value when user choose date
      */
     disbursementDate!.addEventListener('change', () => {
-      this.getValue(propertyValue, loanAmount, loanTerm, interestRate, disbursementDate);
+      this.getValue(inputBoxsParam);
     });
   },
 
   /**
    * function get value, validate and handle value
-   * @param {*} propertyValue
-   * @param {*} loanAmount
-   * @param {*} loanTerm
-   * @param {*} interestRate
-   * @param {*} disbursementDate
    */
-  getValue: function (propertyValue: HTMLInputElement, loanAmount: HTMLInputElement, loanTerm: HTMLInputElement, interestRate: HTMLInputElement, disbursementDate: HTMLInputElement) {
-    const valueOfPropertyValue = Number(propertyValue.value.replace(/\./g, ''));
-    const valueOfLoanAmount = Number(loanAmount.value.replace(/\./g, ''));
-    const valueOfLoanTerm = Number(loanTerm.value);
-    const valueOfInterestRate = Number(interestRate.value);
-    const valueOfDisbursementDate = disbursementDate.value;
+  getValue: function (inputBoxsParam: InputBoxsParam) {
+    const valueOfPropertyValue = Number(inputBoxsParam.propertyValue.value.replace(/\./g, ''));
+    const valueOfLoanAmount = Number(inputBoxsParam.loanAmount.value.replace(/\./g, ''));
+    const valueOfLoanTerm = Number(inputBoxsParam.loanTerm.value);
+    const valueOfInterestRate = Number(inputBoxsParam.interestRate.value);
+    const valueOfDisbursementDate = inputBoxsParam.disbursementDate.value;
+
+    const loanParam = {
+      propertyValue: valueOfPropertyValue,
+      loanAmount: valueOfLoanAmount,
+      loanTerm: valueOfLoanTerm,
+      interestRate: valueOfInterestRate,
+      disbursementDate: valueOfDisbursementDate
+    }
 
     //  validate input
-    const errorsAndMessages = FormInputController.validateValue(valueOfPropertyValue, valueOfLoanAmount, valueOfLoanTerm, valueOfInterestRate, valueOfDisbursementDate);
+    const errorsAndMessages = FormInputController.validateValue(loanParam);
 
     if (errorsAndMessages.inputStatus === true) {
 
       this.setMessageErrorToView(errorsAndMessages)
-      FormInputController.handleLoanValue(valueOfPropertyValue, valueOfLoanAmount, valueOfLoanTerm, valueOfInterestRate, valueOfDisbursementDate);
+      FormInputController.handleLoanValue(loanParam);
     } else {
       this.setMessageErrorToView(errorsAndMessages)
     }
@@ -105,17 +132,11 @@ export const FormInputView = {
 
   /**
    * set value of table result and Modal
-   * @param {*} totaInterestPayple
-   * @param {*} minMonthlyPayment
-   * @param {*} maxMonthlyPayment
-   * @param {*} totalInterest
-   * @param {*} totalOrigin
-   * @param {*} result
    */
-  setValueOfTableResultAndModal: function (totaInterestPayple: string, minMonthlyPayment: string, maxMonthlyPayment: string, totalInterest: string, totalOrigin: string, result: LoanPaymentModel[]) {
+  setValueOfTableResultAndModal: function (valueOfTableResultParam: ValueOfTableResultParam, result: LoanPaymentModel[]) {
 
     // set result to table result
-    this.setValueToTableResult(totalInterest, totaInterestPayple, totalOrigin, minMonthlyPayment, maxMonthlyPayment);
+    this.setValueToTableResult(valueOfTableResultParam);
 
     // set value to modal
     this.setValueOfModal(result);
@@ -204,20 +225,15 @@ export const FormInputView = {
 
   /**
    * set totalInterest, totaInterestPayple, totalOrigin, minMonthlyPayment, maxMonthlyPayment to Decreasing balance sheet
-   * @param {*} totalInterest
-   * @param {*} totaInterestPayple
-   * @param {*} totalOrigin
-   * @param {*} minMonthlyPayment
-   * @param {*} maxMonthlyPayment
    */
-  setValueToTableResult: function (totalInterest: string, totaInterestPayple: string, totalOrigin: string, minMonthlyPayment: string, maxMonthlyPayment: string) {
+  setValueToTableResult: function (valueOfTableResultParam: ValueOfTableResultParam) {
     // set value to table result
-    totalInterestText.textContent = totalInterest;
-    totalPaymentText.textContent = totaInterestPayple;
-    totalOriginText.textContent = totalOrigin;
-    totaInterestPaypleText.textContent = `${totaInterestPayple} VND`;
-    minMonthlyPaymentText.textContent = `${minMonthlyPayment} VND`;
-    maxMonthlyPaymentText.textContent = `${maxMonthlyPayment} VND`;
+    totalInterestText.textContent = valueOfTableResultParam.totalInterest;
+    totalPaymentText.textContent = valueOfTableResultParam.totaInterestPayple;
+    totalOriginText.textContent = valueOfTableResultParam.totalOrigin;
+    totaInterestPaypleText.textContent = `${valueOfTableResultParam.totaInterestPayple} VND`;
+    minMonthlyPaymentText.textContent = `${valueOfTableResultParam.minMonthlyPayment} VND`;
+    maxMonthlyPaymentText.textContent = `${valueOfTableResultParam.maxMonthlyPayment} VND`;
   },
 
   //

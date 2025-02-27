@@ -1,13 +1,24 @@
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
-import { LoanPaymentModel } from '../models/loan_payment_model';
-import { LoanModel } from '../models/loan_model';
+import { LoanPaymentModel } from '@models/loan_payment_model';
+import { LoanModel } from '@models/loan_model';
 
 interface InputErrorMessage {
   inputStatus: boolean,
   errorMessages: string[]
-}
+};
+interface ResultRecordParam {
+  origin: number,
+  remainingOriginalAmount: number,
+  interest: number,
+  repaymentPeriod: string,
+  totalPayable: number
+};
 
+interface RepaymentInfor {
+  remainingOriginalAmount: number,
+  repaymentPeriod: string
+}
 export class Ultil {
   /**
    *function to get date today by format dd/MM/YYY
@@ -69,8 +80,7 @@ export class Ultil {
    *function push date error message to errors
    * push error message of date if date in pass
    */
-  checkDateInPass(
-    date: string, inputErrors: InputErrorMessage) {
+  checkDateInPass(date: string, inputErrors: InputErrorMessage) {
     if (this.isDateInPast(date)) {
       inputErrors.inputStatus = false;
       inputErrors.errorMessages.push('Date cannot be in the past');
@@ -119,39 +129,54 @@ export class Ultil {
     return `${newDay}/${newMonth}/${newYear}`;
   }
 
-  createResultRecord(origin: number, remainingOriginalAmount: number, interest: number, repaymentPeriod: string, totalPayable: number) {
-    return LoanPaymentModel.createResultRecord(origin, remainingOriginalAmount, interest, repaymentPeriod, totalPayable);
+  createResultRecord(param: ResultRecordParam) {
+    const resultRecord = new LoanPaymentModel(param.origin, param.remainingOriginalAmount, param.interest, param.repaymentPeriod, param.totalPayable);
+    return resultRecord;
   }
 
   /**
-   * function calculate remaining amount  
+   * function calculate remaining amount
    * @returns remaining amount per month
    */
   calculateRemainingAmount(remainingAmount: number, origin: number) {
     return Math.max(remainingAmount - origin, 0);
   }
 
-  calculateSingleTermLoan(object: LoanModel, result: LoanPaymentModel[], remainingOriginalAmount: number, repaymentPeriod: string) {
-    const interest = object.calculateInterest(remainingOriginalAmount, object.interestRate);
-    const totalInterestPayable = remainingOriginalAmount + interest;
-    result.push(this.createResultRecord(remainingOriginalAmount, remainingOriginalAmount, interest, repaymentPeriod, totalInterestPayable));
+  calculateSingleTermLoan(object: LoanModel, result: LoanPaymentModel[], repaymentInfor: RepaymentInfor) {
+    const interest = object.calculateInterest(repaymentInfor.remainingOriginalAmount, object.interestRate);
+    const totalInterestPayable = repaymentInfor.remainingOriginalAmount + interest;
+    let param = {
+      origin: repaymentInfor.remainingOriginalAmount,
+      remainingOriginalAmount: repaymentInfor.remainingOriginalAmount,
+      interest: interest,
+      repaymentPeriod: repaymentInfor.repaymentPeriod,
+      totalPayable: totalInterestPayable
+    }
+    result.push(this.createResultRecord(param));
     return totalInterestPayable;
   }
 
-  calculateMultiTermLoan(object: LoanModel, result: LoanPaymentModel[], remainingOriginalAmount: number, repaymentPeriod: string) {
+  calculateMultiTermLoan(object: LoanModel, result: LoanPaymentModel[], repaymentInfor: RepaymentInfor) {
     let totalInterestPayable = 0;
-    let minMonthlyPayment = remainingOriginalAmount;
+    let minMonthlyPayment = repaymentInfor.remainingOriginalAmount;
     let maxMonthlyPayment = 0;
-    const origin = remainingOriginalAmount / object.loanTerm;
+    const origin = repaymentInfor.remainingOriginalAmount / object.loanTerm;
 
     for (let i = 1; i <= object.loanTerm; i++) {
-      const interest = object.calculateInterest(remainingOriginalAmount, object.interestRate);
-      remainingOriginalAmount = this.calculateRemainingAmount(remainingOriginalAmount, origin);
-      repaymentPeriod = this.calculateRepaymentDate(repaymentPeriod);
+      const interest = object.calculateInterest(repaymentInfor.remainingOriginalAmount, object.interestRate);
+      repaymentInfor.remainingOriginalAmount = this.calculateRemainingAmount(repaymentInfor.remainingOriginalAmount, origin);
+      repaymentInfor.repaymentPeriod = this.calculateRepaymentDate(repaymentInfor.repaymentPeriod);
       const totalPayable = origin + interest;
       totalInterestPayable += totalPayable;
+      let param = {
+        origin: origin,
+        remainingOriginalAmount: repaymentInfor.remainingOriginalAmount,
+        interest: interest,
+        repaymentPeriod: repaymentInfor.repaymentPeriod,
+        totalPayable: totalPayable
+      }
 
-      result.push(this.createResultRecord(origin, remainingOriginalAmount, interest, repaymentPeriod, totalPayable));
+      result.push(this.createResultRecord(param));
 
       minMonthlyPayment = Math.min(minMonthlyPayment, totalPayable);
       maxMonthlyPayment = Math.max(maxMonthlyPayment, totalPayable);

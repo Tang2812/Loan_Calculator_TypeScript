@@ -1,6 +1,6 @@
-import { LoanModel } from "../models/loan_model";
-import { Ultil } from "../utils/utils"
-import { PageLoadView } from "../views/page_load_view";
+import { LoanModel } from "@models/loan_model";
+import { Ultil } from "@utils/utils"
+import { PageLoadView } from "@views/page_load_view";
 
 const ultil = new Ultil();
 export const PageLoadController = {

@@ -1,4 +1,4 @@
-import { PageLoadController } from "../controllers/page_load_controller";
+import { PageLoadController } from "@controllers/page_load_controller";
 import flatpickr from 'flatpickr';
 
 export const PageLoadView = {
