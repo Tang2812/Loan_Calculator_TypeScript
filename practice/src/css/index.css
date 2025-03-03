@@ -1,0 +1,11 @@
+@import './base/reset.css';
+@import './base/variables.css';
+@import './base/base.css';
+@import './components/button.css';
+@import './components/title.css';
+@import './sections/form_input.css';
+@import './components/input_slider.css';
+@import './sections/table_result.css';
+@import './sections/modal.css';
+@import './sections/calculate_container.css';
+@import 'https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css';

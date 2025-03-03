@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/index.css">
+  <title>Loan caculator</title>
+</head>
+
+<body>
+  <!-- Header -->
+  <h1 class="title">Loan repayment schedule</h1>
+  <!-- button -->
+  <div class="button-container">
+    <button class="btn active" id="btn-decreasing-balance">Decreasing balance sheet</button>
+    <button class="btn" id="btn-decreasing-balance-sheet">Table of fixed monthly payments</button>
+    <div class="line-under"></div>
+  </div>
+  <div class="calculate-container">
+    <!-- calculate form -->
+    <div class="calculate__form">
+      <div class="form__field">
+        <label class="field__name" for="property-value">Property value</label>
+        <div class="content-errors">
+          <div class="field__input-group">
+            <input type="text" id="property-value" class="input-box">
+            <div class="field__unit">VND</div>
+          </div>
+          <label class="error-message" id="property-error"></label>
+        </div>
+      </div>
+      <div class="form__field">
+        <label class="field__name" for="loan-amount">Loan Amount</label>
+        <div class="slider-container">
+          <input type="range" id="slider" class="slider" name="slider" min="0" max="100" value="0">
+          <span id="sliderValue" class="slider-value">0</span>
+          <div class="value-limited">
+            <span>0%</span>
+            <span>100%</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="form__field">
+        <div class="field__name">
+          <label class="long-title text-lighter" for="loan-amount">Enter the amount you want to borrow or drag to choose
+            a loan rate.</label>
+        </div>
+
+        <div class="content-errors">
+          <div class="field__input-group">
+            <input type="text" id="loan-amount" class="input-box" onchange="">
+            <div class="field__unit">VND</div>
+          </div>
+          <label class="error-message" id="loan-amount-error"></label>
+        </div>
+      </div>
+      <div class="form__field">
+        <label class="field__name" for="loan-term">Loan term</label>
+        <div class="content-errors">
+          <div class="field__input-group">
+            <input type="text" id="loan-term" class="input-box">
+            <div class="field__unit">Month</div>
+          </div>
+          <label class="error-message" id="loan-term-error"></label>
+        </div>
+
+      </div>
+      <div class="form__field">
+        <label class="field__name" for="interest-rate">Interest rate</label>
+        <div class="content-errors">
+          <div class="field__input-group">
+            <input type="text" id="interest-rate" class="input-box">
+            <div class="field__unit">%/Year</div>
+          </div>
+          <label class="error-message" id="interest-rate-error"></label>
+        </div>
+      </div>
+      <div class="form__field">
+        <label class="field__name" for="datepicker">Disbursement date</label>
+        <div class="content-errors">
+          <div class="field__input-group">
+            <input type="text" id="datepicker" class="input-box">
+            <img src="./assets/icons/calendar.svg" class="calendar-icon" alt="calendar-icon">
+          </div>
+          <label class="error-message" id="date-time-error"></label>
+        </div>
+      </div>
+    </div>
+    <!-- result -->
+    <div class="calculate__result">
+      <img class="result__background-image" src="./assets/images/background_result.png" alt="background result">
+      <div class="result__content">
+        <img src="./assets/images/image_money.png" class="result__icon" alt="icon money">
+        <h2 class="result__title">Monthly payment amount</h2>
+        <div class="result__monthly-payment">
+          <div class="monthly-payment__min-amount">
+            <h2 class="result__title">From</h2>
+            <span id="monthly-payment-min-amount" class="result">0 VND</span>
+          </div>
+          <div class="monthly-payment__max-amount ">
+            <h2 class="result__title">To</h2>
+            <span id="monthly-payment-max-amount" class="result">0 VND</span>
+          </div>
+        </div>
+        <div class="monthly-payment__total-iterest-payable">
+          <h2 class="result__title">Total interest payable</h2>
+          <span class="result" id="total-interest-payable">0 VND</span>
+          <button class="btn-open-modal" id="button-export">See more</button>
+        </div>
+
+      </div>
+    </div>
+    <div class="monnthly-payment-calculate__result display--none">
+      <img class="result__background-image" src="./assets/images/background_table_of_monthly.png"
+        alt="background result">
+      <div class="result__content">
+        <img src="./assets/images/money_saving.svg" class="monnthly-payment-result__icon" alt="icon money">
+        <div class="result__monthly-payment">
+          <div class="monthly-payment__min-amount">
+            <h2 class="result__title">Monthly payment amount</h2>
+            <span id="monthly-payment-amount" class="result">0 VND</span>
+          </div>
+        </div>
+        <div class="monthly-payment__total-iterest-payable">
+          <h2 class="result__title">Total interest payable</h2>
+          <span class="result" id="total-money-payable">0 VND</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- modal -->
+  <div class="modal-container">
+    <div class="table-result">
+      <div class="table-result__header">
+        <button class="header__cancel-button" id="button-export">
+          <img src="./assets/icons/x_icon.svg" alt="cancel-icon"></button>
+        <h1 class="table-result__title">Loan payment schedule sheet with decreasing balance</h1>
+      </div>
+      <div class="table-result__body">
+        <table class="table-result__table" id="modal-table-result">
+          <thead class="table__header-footer">
+            <th class="table__header-footer-content">#</th>
+            <th class="table__header-footer-content">REPAYMENT PERIOT</th>
+            <th class="table__header-footer-content">REMAINING ORIGINAL AMOUNT</th>
+            <th class="table__header-footer-content">ORIGIN</th>
+            <th class="table__header-footer-content">INTEREST</th>
+            <th class="table__header-footer-content">TOTAL PRINCIPAL + INTEREST</th>
+          </thead>
+          <tbody>
+          </tbody>
+          <tfoot>
+            <tr class="table__header-footer">
+              <th class="table__header-footer-content">TOTAL</th>
+              <th class="table__header-footer-content"></th>
+              <th class="table__header-footer-content"></th>
+              <th class="table__header-footer-content" id="total-origin">0</th>
+              <th class="table__header-footer-content" id="total-interest">0</th>
+              <th class="table__header-footer-content" id="total-payment">0</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <button class="button-export" id="export">Export to excel</button>
+
+    </div>
+  </div>
+  <script type="module" src="./ts/main.ts"></script>
+</body>
+
+</html>

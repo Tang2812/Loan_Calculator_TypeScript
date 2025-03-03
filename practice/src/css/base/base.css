@@ -1,0 +1,12 @@
+body {
+  background-color: var(--background-light);
+  padding: 0 60px;
+  font-family: sans-serif;
+}
+
+/* mobile */
+@media only screen and (min-width: 320px) and (max-width: 739px) {
+  body {
+    padding: 0 20px;
+  }
+}
