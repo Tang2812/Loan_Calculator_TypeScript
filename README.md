@@ -17,7 +17,6 @@
 * Apply knowledge of HTML5/CSS3/JavaScript (with ES6 syntax).
 * Understand and apply MVC pattern
 * Understand and apply DOM manipulation, form validation.
-* Use DevTools for debugging issues
 * Deploy to the hosting (with help from supporter) (optional)
 ## References
 * [reference](https://techcombank.com/en/tools-utilities/calculators/loan-repayment-schedule)
@@ -28,15 +27,15 @@ git clone https://github.com/Tang2812/Loan_Calculator_TypeScript.git
 ```
 * Move to the cloned repository folder
 ```
-cd Loan-Calculator
+cd Loan_Calculator_TypeScript
 ```
 * Move to folder practice
 ```
 cd practice
 ```
-* Check out to branch TanDinhDev
+* Check out to branch practice
 ```
-git checkout TanDinhDev
+git checkout practice
 ```
 * Install packages
 ```
