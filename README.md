@@ -14,9 +14,8 @@
 ## Editor
 * Visual Studio Code
 ## Target
-* Apply knowledge of HTML5/CSS3/JavaScript (with ES6 syntax).
-* Understand and apply MVC pattern
-* Understand and apply DOM manipulation, form validation.
+* Apply knowledge of HTML5/CSS3/TypeScript (with ES6 syntax).
+* Understand and apply DOM manipulation.
 * Deploy to the hosting (with help from supporter) (optional)
 ## References
 * [reference](https://techcombank.com/en/tools-utilities/calculators/loan-repayment-schedule)
